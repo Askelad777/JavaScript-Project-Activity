@@ -28,32 +28,36 @@ function createAndWriteOutput(operator,resultBeforeCalc,calcNumber){
     outputResult(currentResult,calcDescription);
 }
 
+function writeToLog(arithmeticOperators,previousResult, enteredValue, updatedResult){
+  const entryLog= {
+    operator: arithmeticOperators,
+    prevResult: previousResult,
+    number: enteredValue,
+    result: updatedResult
+  };
 
+  entriesLog.push(entryLog);
+  console.log(entryLog.operator);
+  console.log(entriesLog);
+  }
+
+
+// OPERATIONAL FUNCTION
 
 function add(){
   const enteredNumber = getUserNumInput();
   const initialResult = currentResult;
   currentResult += enteredNumber;
   createAndWriteOutput('+', initialResult, enteredNumber);
-  
-  const entryLog= {
-        operator: 'ADDITION',
-        prevResult: initialResult,
-        number: enteredNumber,
-        result: currentResult
-  };
-
-  entriesLog.push(entryLog);
-  console.log(entriesLog);
+  writeToLog('ADDITION', initialResult,enteredNumber,currentResult);
 }
-
-
 
 function subtract(){
   const enteredNumber = getUserNumInput();
   const initialResult = currentResult;
   currentResult -= enteredNumber;
   createAndWriteOutput('-', initialResult, enteredNumber);
+  writeToLog('SUBTRACTION', initialResult,enteredNumber,currentResult);
 }
 
 function multiply(){
@@ -61,6 +65,7 @@ function multiply(){
   const initialResult = currentResult;
   currentResult *= enteredNumber;
   createAndWriteOutput('*', initialResult, enteredNumber);
+  writeToLog('MULTIPLICATION', initialResult,enteredNumber,currentResult);
 }
 
 function divide(){
@@ -68,6 +73,7 @@ function divide(){
   const initialResult = currentResult;
   currentResult /= enteredNumber;
   createAndWriteOutput('/', initialResult, enteredNumber);
+  writeToLog('DIVISION', initialResult,enteredNumber,currentResult);
 }
 
 
