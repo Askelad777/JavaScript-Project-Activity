@@ -35,6 +35,17 @@ function writeToLog(arithmeticOperators,previousResult, enteredValue, updatedRes
 
   // FUNCTION THAT CALCULATE DEPENDS OF THE USER's OPERATION CHOICE
   function calculateResult(calculationType){
+
+    if( calculationType === 'ADDITION' ||
+        calculationType === 'SUBTRACTION' ||
+        calculationType === 'MULTIPLICATION' ||
+        calculationType === 'DIVISION')
+      {
+        return;
+      }
+
+
+
       const enteredNumber = getUserNumInput();
       const initialResult = currentResult;
       let mathOperator;
@@ -42,16 +53,16 @@ function writeToLog(arithmeticOperators,previousResult, enteredValue, updatedRes
       //CODITIONAL STATEMENT IN OPERATOR
       if(calculationType === 'ADDITION'){  
           currentResult += enteredNumber;
-          mathOperator = ' + ';
+          mathOperator = '+';
       }else if(calculationType ==='SUBTRACTION'){
         currentResult -= enteredNumber;
-        mathOperator = ' - ';
+        mathOperator = '-';
       }else if(calculationType === 'MULTIPLICATION'){
         currentResult *= enteredNumber;
-        mathOperator= ' * ';
-      }else{
+        mathOperator= '*';
+      }else if (calculationType === 'DIVISION'){
         currentResult /= enteredNumber;
-        mathOperator = ' / ';
+        mathOperator = '/';
       }
       
       createAndWriteOutput(mathOperator, initialResult, enteredNumber);
