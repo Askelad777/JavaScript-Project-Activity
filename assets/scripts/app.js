@@ -1,34 +1,24 @@
- /* 
-  parse Int/Float/etc. Is a way to convert the text the way we wanted it to be. 
-  browser  to JS is always on the text so this method is somehow the way how to make it work
-  in a mathematical way.
-
-  on the other hand if we want to convert a number into a string just simply add next to the variable
-  variableName.toString()
-*/
-
+// 2 - 4 lines declared variable and array.
 const defaultResult = 0;
 let currentResult = defaultResult;
 let entriesLog = [];
 
-// this function is just to shorten the hassle everytime we change a variable name.
 
+
+// parse the string into real value
 function getUserNumInput(){
     return parseInt(userInput.value);
 }
 
-/*
-    resultBeforeCalc- is the initial value in the calculator which usually start with 0
-    operator - is the arithmetic operator we decide to use in our calculation
-    calcNumber - it is the  value that we wanted to add or be used along with the initial value
-
-*/
+// PERFORM OPERATIONAl FUNCTION BACK INTO THE WEB-SPACE
 function createAndWriteOutput(operator,resultBeforeCalc,calcNumber){
     const calcDescription = `${resultBeforeCalc} ${operator} ${calcNumber}`;
     outputResult(currentResult,calcDescription);
 }
 
+// WRITE A LOG INTO CONSOLE (HISTORY)
 function writeToLog(arithmeticOperators,previousResult, enteredValue, updatedResult){
+
   const entryLog= {
     operator: arithmeticOperators,
     prevResult: previousResult,
@@ -42,41 +32,54 @@ function writeToLog(arithmeticOperators,previousResult, enteredValue, updatedRes
   }
 
 
+
+  // FUNCTION THAT CALCULATE DEPENDS OF THE USER's OPERATION CHOICE
+  function calculateResult(calculationType){
+      const enteredNumber = getUserNumInput();
+      const initialResult = currentResult;
+      let mathOperator;
+
+      //CODITIONAL STATEMENT IN OPERATOR
+      if(calculationType === 'ADDITION'){  
+          currentResult += enteredNumber;
+          mathOperator = ' + ';
+      }else if(calculationType ==='SUBTRACTION'){
+        currentResult -= enteredNumber;
+        mathOperator = ' - ';
+      }else if(calculationType === 'MULTIPLICATION'){
+        currentResult *= enteredNumber;
+        mathOperator= ' * ';
+      }else{
+        currentResult /= enteredNumber;
+        mathOperator = ' / ';
+      }
+      
+      createAndWriteOutput(mathOperator, initialResult, enteredNumber);
+      writeToLog(calculationType, initialResult,enteredNumber,currentResult);
+  }
+
+
+
 // OPERATIONAL FUNCTION
 
 function add(){
-  const enteredNumber = getUserNumInput();
-  const initialResult = currentResult;
-  currentResult += enteredNumber;
-  createAndWriteOutput('+', initialResult, enteredNumber);
-  writeToLog('ADDITION', initialResult,enteredNumber,currentResult);
+  calculateResult('ADDITION');
 }
 
 function subtract(){
-  const enteredNumber = getUserNumInput();
-  const initialResult = currentResult;
-  currentResult -= enteredNumber;
-  createAndWriteOutput('-', initialResult, enteredNumber);
-  writeToLog('SUBTRACTION', initialResult,enteredNumber,currentResult);
+  calculateResult('SUBTRACTION');
+
 }
 
 function multiply(){
-  const enteredNumber = getUserNumInput();
-  const initialResult = currentResult;
-  currentResult *= enteredNumber;
-  createAndWriteOutput('*', initialResult, enteredNumber);
-  writeToLog('MULTIPLICATION', initialResult,enteredNumber,currentResult);
+  calculateResult('MULTIPLICATION')
 }
 
 function divide(){
-  const enteredNumber = getUserNumInput();
-  const initialResult = currentResult;
-  currentResult /= enteredNumber;
-  createAndWriteOutput('/', initialResult, enteredNumber);
-  writeToLog('DIVISION', initialResult,enteredNumber,currentResult);
+  calculateResult('DIVISION');
 }
 
-
+//OPERATES WHEN BUTTON IS CLICKED AND CALL A FUNCTION
 
 addBtn.addEventListener('click', add);
 
