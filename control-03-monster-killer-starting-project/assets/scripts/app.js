@@ -5,6 +5,7 @@ const HEAL_VAL = 10;
 let chosenMaxLife = 100;
 let currentMonsterHealth = 100;
 let currentPlayerHealth = 100;
+let  hasBonusLife= true;
 
 adjustHealthBars(chosenMaxLife);
 
@@ -20,8 +21,18 @@ function strongAttackHandler(){
 }
 
 function endRound(){
+
+  const initialPlayerHealth = currentPlayerHealth;
   const playerDamage = dealPlayerDamage(MNTRS_DMG);
   currentPlayerHealth -= playerDamage;
+
+  if(currentPlayerHealth <= 0 && hasBonusLife){
+    removeBonusLife();
+    currentPlayerHealth = initialPlayerHealth;
+    setPlayerHealth(initialPlayerHealth);
+    alert('You consumed your bonus life');
+  }
+
 
   if(currentMonsterHealth <= 0 && currentPlayerHealth > 0){
         alert('You won');
