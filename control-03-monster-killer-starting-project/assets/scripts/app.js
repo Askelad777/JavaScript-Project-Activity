@@ -1,4 +1,4 @@
-;
+
 const enteredHealthValue= prompt('Enter a maximum value of player\'s health and monster','200');
 let chosenMaxLife = +enteredHealthValue;
 const ATTACK_DMG = 10;
