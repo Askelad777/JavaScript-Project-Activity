@@ -1,6 +1,4 @@
 
-const enteredHealthValue= prompt('Enter a maximum value of player\'s health and monster','200');
-let chosenMaxLife = +enteredHealthValue;
 const ATTACK_DMG = 10;
 const STRNG_DMG = 18;
 const MNTRS_DMG = 10;
@@ -10,19 +8,42 @@ const LOG_EVENT_PLAYER_STRONG_ATTACK = 'PLAYER_STRONG_ATTACK';
 const LOG_EVENT_MONSTER_ATTACK = 'MONSTER_ATTACK';
 const LOG_EVENT_PLAYER_HEAL = 'PLAYER_HEAL';
 const LOG_EVENT_GAME_OVER = 'GAME_OVER';
-let currentMonsterHealth = +enteredHealthValue;
-let currentPlayerHealth = +enteredHealthValue;
+
+function getMaxLifeValue(){
+  const enteredHealthValue= prompt('Enter a maximum value of player\'s health and monster','200');
+  const parsedValue = +enteredHealthValue;
+  if(isNaN(parsedValue) || parsedValue <= 0){
+    throw {message: 'Invalid userInput not a number'};
+  }
+  return parsedValue;
+  
+}
+try{
+  chosenMaxLife = getMaxLifeValue();
+}catch(error){
+  console.log(error);
+  chosenMaxLife =100;
+  alert('You enter a NAN, it will turn to a default life 100');
+  throw error;
+}
+
+let chosenMaxLife = getMaxLifeValue();
+
+
+let currentMonsterHealth = chosenMaxLife;
+let currentPlayerHealth = chosenMaxLife;
 let  hasBonusLife= true;
 let battlelog = [];
+let lastLogEntry;
+
+
+
 
 
 const NormalMode = 'normalMode'; // normal mode = 1
 const hardCore = 'hardMode'; // hard mode = 2
 
 
-if(isNaN(+enteredHealthValue) || chosenMaxLife <= 0){
-  chosenMaxLife = 100;
-}
 adjustHealthBars(chosenMaxLife);
 
 function writeToLog(event, value, monsterhealth,playerHealth){
@@ -236,9 +257,15 @@ function printLogHandler(){
     console.log('----------------');
   }
 
-  let j = 3;
-  do{
-    console(j);
+  let j = 0;
+  outerWhile: do{
+    console.log('Outer',j);
+    innerFor: for (let k = 0; k < 5; k++){
+      if(k === 3){
+        break outerWhile;
+      }
+      console.log('Inner', k);
+    }
     j++;
   }while(j < 3);
 
@@ -252,12 +279,16 @@ function printLogHandler(){
 
   let i = 0;
   for(const logEntry of battlelog){
-    console.log(logEntry);
-    for(const key in logEntry){
-      console.log(`${key} => ${logEntry[key]}`);
+    if(!lastLogEntry && lastLogEntry !== 0|| lastLogEntry < i){
+      console.log(`#${i}`);
+      for(const key in logEntry){
+        console.log(`${key} => ${logEntry[key]}`);
+      }
+      lastLogEntry = i;
+      break;
     }
+    i++;
   }
-  i++;
 }
 
 attackBtn.addEventListener('click', attackHandler);
