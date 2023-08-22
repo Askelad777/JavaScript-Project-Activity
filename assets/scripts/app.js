@@ -6,7 +6,7 @@ let entriesLog = [];
 
 
 // parse the string into real value
-function getUserNumInput(){
+const getUserNumInput= () =>{
     return parseInt(userInput.value);
 }
 
@@ -31,71 +31,37 @@ function writeToLog(arithmeticOperators,previousResult, enteredValue, updatedRes
   console.log(entriesLog);
   }
 
-
-
-  // FUNCTION THAT CALCULATE DEPENDS OF THE USER's OPERATION CHOICE
-  function calculateResult(calculationType){
-
-    if( calculationType === 'ADDITION' ||
-        calculationType === 'SUBTRACTION' ||
-        calculationType === 'MULTIPLICATION' ||
-        calculationType === 'DIVISION')
-      {
-        return;
-      }
-
-
-
-      const enteredNumber = getUserNumInput();
-      const initialResult = currentResult;
-      let mathOperator;
-
-      //CODITIONAL STATEMENT IN OPERATOR
-      if(calculationType === 'ADDITION'){  
-          currentResult += enteredNumber;
-          mathOperator = '+';
-      }else if(calculationType ==='SUBTRACTION'){
-        currentResult -= enteredNumber;
-        mathOperator = '-';
-      }else if(calculationType === 'MULTIPLICATION'){
-        currentResult *= enteredNumber;
-        mathOperator= '*';
-      }else if (calculationType === 'DIVISION'){
-        currentResult /= enteredNumber;
-        mathOperator = '/';
-      }
-      
-      createAndWriteOutput(mathOperator, initialResult, enteredNumber);
-      writeToLog(calculationType, initialResult,enteredNumber,currentResult);
-  }
-
-
-
 // OPERATIONAL FUNCTION
 
-function add(){
-  calculateResult('ADDITION');
-}
 
-function subtract(){
-  calculateResult('SUBTRACTION');
 
-}
-
-function multiply(){
-  calculateResult('MULTIPLICATION')
-}
-
-function divide(){
-  calculateResult('DIVISION');
+const calculation = (operation) =>{
+  const enteredNumber = getUserNumInput();
+  const initialResult = currentResult;
+  let operator;
+  if(operation === 'ADD'){
+    currentResult += enteredNumber;
+    operator = '+';
+  }else if(operation === 'SUBTRACT'){
+    currentResult += enteredNumber;
+    operator = '-';   
+  }else if(operation === 'MULTIPLY'){
+    currentResult += enteredNumber;
+    operator = '*';
+  }else{
+    currentResult += enteredNumber;
+    operator = '/';
+  }
+  createAndWriteOutput(operator, initialResult, enteredNumber);
+  writeToLog(operation, initialResult,enteredNumber,currentResult);
 }
 
 //OPERATES WHEN BUTTON IS CLICKED AND CALL A FUNCTION
 
-addBtn.addEventListener('click', add);
+addBtn.addEventListener('click', calculation.bind(this, 'ADD'));
 
-subtractBtn.addEventListener('click', subtract);
+subtractBtn.addEventListener('click', calculation.bind(this, 'SUBTRACT'));
 
-multiplyBtn.addEventListener('click', multiply);
+multiplyBtn.addEventListener('click', calculation.bind(this, 'MULTIPY'));
 
-divideBtn.addEventListener('click', divide);
+divideBtn.addEventListener('click', calculation.bind(this, 'DIVIDE'));
