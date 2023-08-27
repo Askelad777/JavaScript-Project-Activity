@@ -1,4 +1,4 @@
-// const initialization
+// DOCUMENT OBJECT MODEL - ACCESSING HTML ELEMENTS  
 
 const addMovieModal = document.getElementById('add-modal');
 
@@ -17,32 +17,45 @@ const  entryTextSectionInput = document.getElementById('entry-text');
 //fetching value from browser 
 
 const userInputs = addMovieModal.querySelectorAll('input');
-//parameter(tag)
+              //parameter(tag)  // Using userInputs.value to access VAL.
 
-// FUNCTION BELOW
+
+
+
+// LOGIC of RENDEERING VALUE IN SCREEN FUNCTION BELOW
 const toggleBackdrop = () =>{
   backdrop.classList.toggle('visible');
 }
-const toggleMovieModal =  () =>{
-    addMovieModal.classList.toggle('visible');
+
+const closeMovieModal = () =>{
+  addMovieModal.classList.remove('visible');
+  toggleBackdrop();
+
+};
+
+const showMovieModal =  () =>{
+    addMovieModal.classList.add('visible');
     toggleBackdrop();
 };
 
 const toggleBackdropHandler = () =>{
-  toggleMovieModal();
+  closeMovieModal();
 };
 
 const cancelAddMovieModal = () =>{
-    toggleMovieModal();
+    closeMovieModal();
+    clearMovieValue();
 };
 
-const clearMovieValue =()=>{
-  userInputs[0].value = '';
-  userInputs[1].value = '';
-  userInputs[2].value = '';
+const clearMovieValue = () => {
+  for(const userInput of userInputs){
+    userInput.value = '';
+  }
 }; 
 
 
+
+//  SHOW DISPLAY INPUT ON SCREEN;
 
 const updateScreendisplay = () =>{
   if(movies.length === 0){
@@ -50,6 +63,49 @@ const updateScreendisplay = () =>{
   }else{
     entryTextSectionInput.style.display ='none';
   }
+
+};
+const rendeerMoviesValue = (id, title, imageUrl, rating) =>{
+  const newMovieList = document.createElement('li');
+  newMovieList.className = 'movie-element';
+  newMovieList.innerHTML = `
+    <div class="movie-element__title" alt=""${title}>
+      <img scr="${imageUrl}" alt="${title}">
+    </div>
+    <div class="movie-element__info">
+      <h2>${title}</h2>
+      <p>${rating} /5 stars</p>
+    </div> 
+  `;
+
+  newMovieList.addEventListener('click', deleteMovieHandler.bind(null, id))
+  const listRoot = document.getElementById('movie-list');
+  listRoot.append(newMovieList);
+};
+
+// DELETE AND ADD MOVIE FUNCTION - START 
+
+const deleteMovie = movieId =>{
+  let movieIndex = 0;
+  for(const movie of movies){
+    if(movie.id === movieId){
+      break;
+    }
+    movieIndex++;
+  };
+  movies.splice(movieIndex, 1);
+  const listRoot = document.getElementById('movie-list');
+  listRoot.children[movieIndex].remove();
+  // listRoot.removeChild(listRoot.children[movieIndex]);
+
+
+};
+const deleteMovieHandler = (movieId) =>{
+  const deleteMovieModal = document.getElementById("delete-modal");
+
+  deleteMovieModal.classList.add('visible')
+  //deleteMovie(movieId);
+  backdrop();
 
 };
 
@@ -64,11 +120,12 @@ const addMovieHandler = () => {
     imageUrlvalue.trim() === '' || 
     ratingsValue === '' ||
     +ratingsValue < 1 ||
-    +ratingsValue >5){
+    +ratingsValue > 5){
       alert('Please input value or do follow the rules!')
 
   }
   const newMovies = {
+    id: Math.random().toString(),
     title: titlevalue,
     image: imageUrlvalue,
     ratings: ratingsValue
@@ -76,13 +133,14 @@ const addMovieHandler = () => {
 
   movies.push(newMovies);
   console.log(movies);
-  toggleMovieModal();
+  closeMovieModal();
   clearMovieValue();
+  rendeerMoviesValue(newMovies.id, newMovies.title, newMovies.image, newMovies.ratings);
   updateScreendisplay();
 };
 
-
-startAddMovieButton.addEventListener('click', toggleMovieModal)
+// DELETE AND ADD MOVIE FUNCTION - END  
+startAddMovieButton.addEventListener('click', showMovieModal)
 
 backdrop.addEventListener('click', toggleBackdropHandler);
 
