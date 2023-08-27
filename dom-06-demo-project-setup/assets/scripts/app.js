@@ -14,6 +14,7 @@ const movies = [];
 
 const  entryTextSectionInput = document.getElementById('entry-text');
 
+const deleteMovieModal = document.getElementById("delete-modal");
 //fetching value from browser 
 
 const userInputs = addMovieModal.querySelectorAll('input');
@@ -38,8 +39,10 @@ const showMovieModal =  () =>{
     toggleBackdrop();
 };
 
-const toggleBackdropHandler = () =>{
+const BackdropClickHandler = () =>{
   closeMovieModal();
+  closeMovieDeletionModal();
+  clearMovieValue();
 };
 
 const cancelAddMovieModal = () =>{
@@ -52,6 +55,9 @@ const clearMovieValue = () => {
     userInput.value = '';
   }
 }; 
+
+
+// LOGIC of RENDEERING VALUE IN SCREEN FUNCTION ABOVE
 
 
 
@@ -78,14 +84,28 @@ const rendeerMoviesValue = (id, title, imageUrl, rating) =>{
     </div> 
   `;
 
-  newMovieList.addEventListener('click', deleteMovieHandler.bind(null, id))
+  newMovieList.addEventListener('click', startDeleteMovieHandler.bind(null, id))
   const listRoot = document.getElementById('movie-list');
   listRoot.append(newMovieList);
 };
 
+
+//  DELETION MODAL
+
+const closeMovieDeletionModal = () => {
+  deleteMovieModal.classList.remove('visible');
+  toggleBackdrop();
+};
+
+
+
+
+
+
 // DELETE AND ADD MOVIE FUNCTION - START 
 
-const deleteMovie = movieId =>{
+
+const deleteMovieHandler = movieId =>{
   let movieIndex = 0;
   for(const movie of movies){
     if(movie.id === movieId){
@@ -97,16 +117,27 @@ const deleteMovie = movieId =>{
   const listRoot = document.getElementById('movie-list');
   listRoot.children[movieIndex].remove();
   // listRoot.removeChild(listRoot.children[movieIndex]);
+  closeMovieDeletionModal();
+  updateScreendisplay();
+  
 
 
 };
-const deleteMovieHandler = (movieId) =>{
-  const deleteMovieModal = document.getElementById("delete-modal");
+const startDeleteMovieHandler = (movieId) =>{
+  deleteMovieModal.classList.add('visible');
+  toggleBackdrop();
 
-  deleteMovieModal.classList.add('visible')
-  //deleteMovie(movieId);
-  backdrop();
+      // CONFIRM OR CANCEL DELETIION
+  const cancelDeletionBTN = deleteMovieModal.querySelector('.btn--passive');// YES 
+  let confirmDeletionBTN = deleteMovieModal.querySelector('.btn--danger'); // NO
+   //deleteMovie(movieId);
 
+  confirmDeletionBTN.replaceWith(confirmDeletionBTN.cloneNode(true))
+  confirmDeletionBTN = deleteMovieModal.querySelector('.btn--danger');
+
+  cancelDeletionBTN.addEventListener('click', closeMovieDeletionModal);
+  confirmDeletionBTN.addEventListener('click', deleteMovieHandler
+  .bind(null, movieId));
 };
 
 
@@ -121,8 +152,8 @@ const addMovieHandler = () => {
     ratingsValue === '' ||
     +ratingsValue < 1 ||
     +ratingsValue > 5){
-      alert('Please input value or do follow the rules!')
-
+      alert('Please input value or do follow the rules!');
+      return;
   }
   const newMovies = {
     id: Math.random().toString(),
@@ -130,6 +161,7 @@ const addMovieHandler = () => {
     image: imageUrlvalue,
     ratings: ratingsValue
   };
+
 
   movies.push(newMovies);
   console.log(movies);
@@ -142,7 +174,7 @@ const addMovieHandler = () => {
 // DELETE AND ADD MOVIE FUNCTION - END  
 startAddMovieButton.addEventListener('click', showMovieModal)
 
-backdrop.addEventListener('click', toggleBackdropHandler);
+backdrop.addEventListener('click', BackdropClickHandler);
 
 cancelMovieModal.addEventListener('click', cancelAddMovieModal);
 
