@@ -1,5 +1,7 @@
 // CLASSES 
 
+
+// A Class that create a new item inside the productlIst via instantiation 
 class Product{
   title = 'DEFAULT';
   prodImage;
@@ -15,14 +17,17 @@ class Product{
   }
 }
 
+
+// Class that render the product to the web  and has a function of add to card feature.
 class ProductItem{ 
   constructor(product){
     this.product = product; 
   }
 addToCart(){
-  console.log('Adding product to cart...');
-  console.log(this.product);
+  app.addProductToCart(this.product); 
 }
+
+
 render()
   {
     const prodEl = document.createElement('li');
@@ -45,7 +50,7 @@ render()
 }
 
 
-
+// Class that append the product into the list.
 class ProductList{
   Products = [
     new Product('Samsung','https://th.bing.com/th/id/OIP.98lp1OWUH9TMkW78x4XUcAHaE8?pid=ImgDet&rs=1',59999,'Android Phone'),
@@ -69,38 +74,95 @@ class ProductList{
 }
 
 
-class shoppingCart {
+class Components{
+  constructor(renderHookId){
+    this.hookId = renderHookId;
+  }
+  createRootElement(tag,cssClasses,attribute){
+    const rootElement = document.createElement(tag);
+    if(cssClasses){
+      rootElement.className = cssClasses;
+    }
+    if(attribute && attribute.length > 0){
+      for(const attr of attribute){
+        rootElement.setAttribute(attr.name, attr.value);
+      } 
+    }
+    document.getElementById(this.hookId).append(rootElement);
+    return rootElement;
+  }
+}
+// This class show the amount of the current product to purchase/buy!
+class shoppingCart extends Components{
   items = [];
+
+  set cartItems(value){
+    this.items = value; 
+    this.totalOutput.innerHTML = `<h2>Total:\$${this.totalAmount.toFixed(2)}</h2>`;
+  }
+  get totalAmount(){
+    const sum = this.items.reduce((previousValue,currentItem)=>previousValue + currentItem.prodPrice,0)
+    return sum;
+  }
+
+  constructor(renderHookId){
+    super(renderHookId);
+  }
+  addingProduct(product){
+    const updatedItems = [...this.items];
+    updatedItems.push(product);
+    this.cartItems = updatedItems;    
+  }
+
   render(){
-    const cartEl = document.createElement('section');
+    const cartEl = this.createRootElement('section', 'cart', );
     cartEl.innerHTML = `
     <h2>Total:\$${0}</h2>
     <button>Order Now!</button>
     `;
-    cartEl.className = 'cart';
-    return cartEl;
+    this.totalOutput = cartEl.querySelector('h2');
   }
 }
+
+
+// handler to operate all the classes. Gathered in one.
 
 class Shop {
   render(){
     const renderHook = document.getElementById('app');
     
-    const cart = new shoppingCart();
-    const cartEl = cart.render();
-
-
-    
+    this.cart = new shoppingCart('app');
+    this.cart.render(); 
     const productList = new ProductList();
     const prodListEl = productList.render();
-    
-    renderHook.append(cartEl);
+
     renderHook.append(prodListEl);
   }
 }
 
 
+
+class app{
+
+  static cart;
+  static init(){
+    const shop = new Shop();
+    shop.render();
+    this.cart = shop.cart;
+  }
+
+  static addProductToCart (product){
+    this.cart.addingProduct(product);
+  }
+}
+
+class elementAttribute{
+  constructor(attrName, attrValue){
+    this.name = attrName;
+    this.value = attrValue
+  }
+}
+
 // --------------------------------------------
 
-const shop = new shop();
-shop.render();
+app.init();
