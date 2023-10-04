@@ -38,9 +38,10 @@ class Component{
   
 }
 class ToolTip extends Component{
-  constructor(closeNotifierFunction){
+  constructor(closeNotifierFunction, Text){
     super('active-projects', true);
     this.closeNotifier = closeNotifierFunction;
+    this.Text = Text;
     this.create();
   }
   closeTooltip = () =>{
@@ -52,7 +53,7 @@ class ToolTip extends Component{
     console.log('The ToolTip.');
     const tooltipElement = document.createElement('div');
     tooltipElement.className = 'card';
-    tooltipElement.textContent = 'Dummy';
+    tooltipElement.textContent = this.Text;
     tooltipElement.addEventListener('click', this.closeTooltip)
     this.element = tooltipElement;
   }
@@ -64,6 +65,8 @@ class ToolTip extends Component{
 
 class ProjectItem{
   hasActiveTooltip = false;
+
+
   constructor(id, updateProjectListFunction, type){
     this.id = id;
     this.updateProjectListHandler = updateProjectListFunction;
@@ -76,9 +79,15 @@ class ProjectItem{
     if(this.hasActiveTooltip){
       return;
     }
+
+    const projectElement = document.getElementById(this.id);
+    console.log(projectElement.dataset);
+    const TooltipText = projectElement.dataset.extraInfo;
+    // projectElement.dataset.someInfo = "test"; - Adding another attributes in the node
+
     const tooltip = new ToolTip(()=>{
       this.hasActiveTooltip = false;
-    });
+    },TooltipText);
     tooltip.show();
     this.hasActiveTooltip = true;
 
@@ -87,7 +96,7 @@ class ProjectItem{
   connectMoreInfoButton(){
     const projectItemElement = document.getElementById(this.id);
     let moreInfoBtn = projectItemElement.querySelector('button:first-of-type');
-    moreInfoBtn.addEventListener('click', this.showMoreInfoHandler)
+    moreInfoBtn.addEventListener('click', this.showMoreInfoHandler.bind(this))
   }
 
   connectSwitchButton(type){
