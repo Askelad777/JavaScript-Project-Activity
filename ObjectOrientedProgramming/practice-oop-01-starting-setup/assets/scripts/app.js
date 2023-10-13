@@ -12,7 +12,7 @@ class DOMHelper{
     const element = document.getElementById(elementId);
     const destinationElement = document.querySelector(newDestinationSelector);
     destinationElement.append(element);
-    // element.scrollIntoView();
+    element.scrollIntoView({behavior: 'smooth'}); // Smooth view scrolling 
     
   }
 }
@@ -51,11 +51,12 @@ class ToolTip extends Component{
     this.closeNotifier();
   }
   create(){
-    
-    console.log('The ToolTip.');
     const tooltipElement = document.createElement('div');
     tooltipElement.className = 'card';
-    tooltipElement.textContent = this.Text;
+    const tooltipTemplate = document.getElementById('tooltip');
+    const tooltipBody = document.importNode(tooltipTemplate.content, true);
+    tooltipBody.querySelector('p').textContent = this.text;
+    tooltipElement.append(tooltipBody);
 
     const hostElementPosLeft = this.hostElement.offsetLeft;
     const hostElementPosTop = this.hostElement.offsetTop;
@@ -202,6 +203,18 @@ class App {
 
      finishedProjectsList.setSwitchHandlerFunction(activeProjectsList.addProject.bind(activeProjectsList));
 
+      const timerId = setTimeout(this.startAnalytic, 3000); //3 sec timer
+
+      document.getElementById('stop-analytics-btn').addEventListener('click', ()=>{
+        clearTimeout(timerId);
+      });
+    }
+
+    static startAnalytic(){
+      const analyticScript = document.createElement('script');
+      analyticScript.src = 'assets/scripts/analytics.js';
+      analyticScript.defer = true;
+      document.head.append(analyticScript);
   }
 }
 
